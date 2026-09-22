@@ -1,4 +1,4 @@
-import { BadRequestException, Controller , Get , NotFoundException, Param, Post , Body} from '@nestjs/common';
+import { BadRequestException, Controller , Get , NotFoundException, Param, Post , Body , Put} from '@nestjs/common';
 
 @Controller('products')
 export class ProductsController {
@@ -60,5 +60,36 @@ export class ProductsController {
     }
 
     // PUT '/products/:id'
-    @Put()
+    @Put(':id')
+    update(
+        @Param('id') id:string,
+        @Body() body: { title?: string; price?: number}
+    )
+    {
+        const productId = parseInt(id , 10)
+        const product = this.products.find(p=> p.id === productId)
+
+        if(!product){ throw new NotFoundException(`Product with ID ${id} not found!`)}
+        
+        if(body.title !== undefined) product.title = body.title;
+        if(body.price !== undefined) product.price = body.price;
+
+        return{
+            success: true,
+            message: `Product ${id} updated succesfully`,
+            data: product
+        }
+
+
+    }
+
+    // DELETE '/products/:id'
+    @Delete(':id')
+    remove(@Param('id') id :string)
+    {
+        const productId = parseInt(id , 10);
+        const index = this.products.findIndex(p => p.id === productId)
+        
+        if(index === -1){ throw new NotFoundException(`Product with`)}
+    }
 }
