@@ -30,42 +30,20 @@ export class ProductsController {
     // PUT '/products/:id'
     @Put(':id')
     update(
-        @Param('id') id:string,
-        @Body() body: { title?: string; price?: number}
+        @Param('id')id:string,
+        @Body() body: {title?: string , price?: number}
     )
     {
-        const productId = parseInt(id , 10)
-        const product = this.products.find(p=> p.id === productId)
-
-        if(!product){ throw new NotFoundException(`Product with ID ${id} not found!`)}
-        
-        if(body.title !== undefined) product.title = body.title;
-        if(body.price !== undefined) product.price = body.price;
-
-        return{
-            success: true,
-            message: `Product ${id} updated succesfully`,
-            data: product
-        }
-
-
+        return this.productServices.update(id , body)
     }
+
+
+
 
     // DELETE '/products/:id'
     @Delete(':id')
-    remove(@Param('id') id :string)
+    remove(@Param('id') id: string)
     {
-        const productId = parseInt(id , 10);
-        const index = this.products.findIndex(p => p.id === productId)
-        
-        if(index === -1){ throw new NotFoundException(`Product with ${id} not found!`)}
-
-        const deleted = this.products.splice(index , 1)[0]
-
-        return{
-            success: true,
-            message:"Product deleted succesfully",
-            data: deleted
-        }
+        return this.productServices.remove(id)
     }
 }
