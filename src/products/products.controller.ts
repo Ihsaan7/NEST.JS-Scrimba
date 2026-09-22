@@ -1,4 +1,4 @@
-import { BadRequestException, Controller , Get , NotFoundException, Param, Post , Body , Put} from '@nestjs/common';
+import { BadRequestException, Controller , Get , NotFoundException, Param, Post , Body , Put , Delete} from '@nestjs/common';
 
 @Controller('products')
 export class ProductsController {
@@ -90,6 +90,14 @@ export class ProductsController {
         const productId = parseInt(id , 10);
         const index = this.products.findIndex(p => p.id === productId)
         
-        if(index === -1){ throw new NotFoundException(`Product with`)}
+        if(index === -1){ throw new NotFoundException(`Product with ${id} not found!`)}
+
+        const deleted = this.products.splice(index , 1)[0]
+
+        return{
+            success: true,
+            message:"Product deleted succesfully",
+            data: deleted
+        }
     }
 }
