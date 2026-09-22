@@ -54,6 +54,31 @@ export class ProductsService {
     update(id:string, body:{title?: string , price?:number})
     {
         const productId = parseInt(id , 10)
-        
+        const product = this.products.find(p=> p.id === productId)
+        if(!product){ throw new NotFoundException("No product found")}
+
+        if(body.title !== undefined){ product.title = body.title}
+        if(body.price !== undefined){ product.price = body.price}
+
+        return{
+            success: true,
+            message:"Data changed",
+            data:product
+        }
     }
+
+    remove(id:string)
+    {
+        const productId = parseInt(id , 10)
+        const index = this.products.findIndex(p=> p.id === productId)
+        
+        if(index === -1){ throw new NotFoundException("No product found")}
+        const deleted = this.products.splice(index, 1)[0]
+        
+        return{
+            success: true,
+            message: "Product deleted",
+            data: deleted
+        }
+        }
 }
