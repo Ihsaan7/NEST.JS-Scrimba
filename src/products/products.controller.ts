@@ -1,7 +1,9 @@
-import { BadRequestException, Controller , Get , NotFoundException, Param, Post , Body , Put , Delete} from '@nestjs/common';
+import { BadRequestException, Controller , Get , NotFoundException, Param, Post , Body , Put , Delete, UseGuards} from '@nestjs/common';
 import { ProductsService } from './products.service.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { UpdateProductDto } from './dto/update-product.dto.js';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { AuthGuard } from '../common/guards/auth.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -24,6 +26,7 @@ export class ProductsController {
 
     // POST '/products'
     @Post()
+    @UseGuards(new RolesGuard('admin'))
     create(@Body() body: CreateProductDto)
     {
         return this.productServices.create(body)
@@ -31,6 +34,7 @@ export class ProductsController {
 
     // PUT '/products/:id'
     @Put(':id')
+    @UseGuards(new RolesGuard('admin'))
     update(
         @Param('id')id:string,
         @Body() body: UpdateProductDto)
@@ -40,10 +44,9 @@ export class ProductsController {
     }
 
 
-
-
     // DELETE '/products/:id'
     @Delete(':id')
+    @UseGuards(new RolesGuard('admin'))
     remove(@Param('id') id: string)
     {
         return this.productServices.remove(id)
