@@ -1,5 +1,7 @@
 import { BadRequestException, Controller , Get , NotFoundException, Param, Post , Body , Put , Delete} from '@nestjs/common';
 import { ProductsService } from './products.service.js';
+import { CreateProductDto } from './dto/create-product.dto.js';
+import { UpdateProductDto } from './dto/update-product.dto.js';
 
 @Controller('products')
 export class ProductsController {
@@ -16,17 +18,14 @@ export class ProductsController {
     @Get(':id')
     findOne(@Param('id') id:string)
     {
-        const productId = parseInt(id , 10)
-        if(isNaN(productId)){ throw new BadRequestException("Invalid ID formate")}
         return this.productServices.findOne(id)
     }
 
 
     // POST '/products'
     @Post()
-    create(@Body() body:{title: string , price: number})
+    create(@Body() body: CreateProductDto)
     {
-        if(!body.title || body.price === undefined){ throw new BadRequestException("Title and price required!")}
         return this.productServices.create(body)
     }
 
@@ -34,8 +33,7 @@ export class ProductsController {
     @Put(':id')
     update(
         @Param('id')id:string,
-        @Body() body: {title?: string , price?: number}
-    )
+        @Body() body: UpdateProductDto)
     {
     
         return this.productServices.update(id , body)
