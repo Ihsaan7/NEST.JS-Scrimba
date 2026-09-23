@@ -16,6 +16,8 @@ export class ProductsController {
     @Get(':id')
     findOne(@Param('id') id:string)
     {
+        const productId = parseInt(id , 10)
+        if(isNaN(productId)){ throw new BadRequestException("Invalid ID formate")}
         return this.productServices.findOne(id)
     }
 
@@ -24,6 +26,7 @@ export class ProductsController {
     @Post()
     create(@Body() body:{title: string , price: number})
     {
+        if(!body.title || body.price === undefined){ throw new BadRequestException("Title and price required!")}
         return this.productServices.create(body)
     }
 
@@ -34,6 +37,7 @@ export class ProductsController {
         @Body() body: {title?: string , price?: number}
     )
     {
+    
         return this.productServices.update(id , body)
     }
 
